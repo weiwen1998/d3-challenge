@@ -27,7 +27,9 @@ function makeResponsive() {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
- 
+  var chartGroup = svg.append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
   d3.csv("assets/data/data.csv").then(function(trendData) {
 
     trendData.forEach(function(data) {
@@ -43,7 +45,7 @@ function makeResponsive() {
       .call(d3.axisBottom(x));
 
     var y = d3.scaleLinear()
-      .domain([0, d3.max(trendData, d => d.healthcare)])
+      .domain(d3.extent(trendData, d => d.healthcare))
       .range([height, 0]);
     svg.append("g")
       .call(d3.axisLeft(y));
@@ -73,15 +75,15 @@ function makeResponsive() {
       .attr("dy", 7)
 
     chartGroup.append("text")
+    .attr("class", "y label")
     .attr("transform", "rotate(-90)")
-    .attr("y", 0 - margin.left + 40)
+    .attr("y", 0 - margin.left - 20)
     .attr("x", 0 - (height / 2))
-    .attr("class", "axisText")
     .text("Healthcare");
 
     chartGroup.append("text")
-      .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
-      .attr("class", "axisText")
+      .attr("class", "x label")
+      .attr("transform", `translate(${width / 2}, ${height + margin.top - 70})`)
       .text("Poverty");
   
   }).catch(function(error) {
