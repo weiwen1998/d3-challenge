@@ -27,9 +27,7 @@ function makeResponsive() {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  // var chartGroup = svg.append("g")
-  //   .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
+ 
   d3.csv("assets/data/data.csv").then(function(trendData) {
 
     trendData.forEach(function(data) {
@@ -50,27 +48,6 @@ function makeResponsive() {
     svg.append("g")
       .call(d3.axisLeft(y));
     
-    // var xAxis = d3.axisBottom(xLinearScale);
-    // var yAxis = d3.axisLeft(yLinearScale).ticks(6);
-
-    // chartGroup.append("g")
-    //   .attr("transform", `translate(0, ${height})`)
-    //   .call(xAxis);
-
-    // chartGroup.append("g")
-    //   .call(yAxis);
-
-    // var scatter = d3.scaleLinear()
-    //   .x(d => x(d.poverty))
-    //   .y(d => y(d.healthcare));
-
-    // chartGroup.append("path")
-    //   .data([trendData])
-    //   .attr("d", scatter)
-    //   .attr("fill", "none")
-    //   .attr("stroke", "red");
-
-    // var circlesGroup = 
     svg.append('g')
       .selectAll("dot")
       .data(trendData)
@@ -78,27 +55,35 @@ function makeResponsive() {
       .append("circle")
       .attr("cx", function (d) {return x(d.poverty);})
       .attr("cy", function (d) {return y(d.healthcare);})
-      .attr("r", "1.5")
-      .attr("fill", "pink")
-      .style("fill", "#69b3a2")
+      .attr("r", "15")
+      .attr("fill", "red")
+      .attr("opacity", "0.5")
 
+      svg.append('g')
+      .selectAll("dot")
+      .data(trendData)
+      .enter()
+      .append("text")
+      .attr("x", function (d) {return x(d.poverty);})
+      .attr("y", function (d) {return y(d.healthcare);})
+      .attr("fill", "black")
+      .attr("opacity", "0.75")
+      .text(function (d) {return d.abbr})
+      .attr("dx", -10)
+      .attr("dy", 7)
 
-    // var toolTip = d3.select("body")
-    //   .append("div")
-    //   .classed("tooltip", true);
+    chartGroup.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left + 40)
+    .attr("x", 0 - (height / 2))
+    .attr("class", "axisText")
+    .text("Healthcare");
 
-    // circlesGroup.on("mouseover", function(d) {
-    //   toolTip.style("display", "block")
-    //       .html(
-    //         `<strong>${d.poverty}<strong><hr>${d.healthare}
-    //     medal(s) won`)
-    //       .style("left", d3.event.pageX + "px")
-    //       .style("top", d3.event.pageY + "px");
-    // })
-    //   .on("mouseout", function() {
-    //     toolTip.style("display", "none");
-    //   });
-
+    chartGroup.append("text")
+      .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
+      .attr("class", "axisText")
+      .text("Poverty");
+  
   }).catch(function(error) {
     console.log(error);
   });
